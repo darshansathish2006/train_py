@@ -6,3 +6,4 @@ conn=mysql.connector.connect(
     password="Darshan@06",
     
 )
+print("Hi")
