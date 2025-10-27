@@ -5,6 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Railway Reservation System</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .suggestions-box {
+            position: absolute;
+            background: #23272f;
+            border: 1.5px solid #6999be;
+            border-radius: 6px;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 2000;
+            width: 100%;
+            box-shadow: 0 4px 16px rgba(60,80,140,0.27);
+            margin-top: 8px;
+            display: none;
+            color: #eee;
+        }
+
+        .suggestion-item {
+            padding: 13px 18px;
+            cursor: pointer;
+            border-bottom: 1px dotted #444;
+            font-size: 15px;
+            transition: background 0.17s;
+            background: none;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.active {
+            background-color: #2f3e52;
+            color: #fff;
+        }
+
+        .suggestion-item strong {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .suggestion-item small {
+            color: #7eb9fd;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .search-input-group {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
     <!-- Main Container -->
@@ -52,13 +103,14 @@
             </section>
         </div>
 
+
         <!-- Passenger Login Page -->
         <div id="passenger-login" class="page">
             <div class="auth-container">
                 <div class="auth-card">
                     <button class="back-btn" onclick="showPage('home-page')">&larr; Back to Home</button>
                     <h2>Passenger Login</h2>
-                    <form id="passenger-login-form" onsubmit="handlePassengerLogin(event)">
+                    <form id="login-form" onsubmit="handlePassengerLogin(event)">
                         <div class="form-group">
                             <label class="form-label" for="login-email">Email</label>
                             <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
@@ -76,13 +128,14 @@
             </div>
         </div>
 
+
         <!-- Passenger Register Page -->
         <div id="passenger-register" class="page">
             <div class="auth-container">
                 <div class="auth-card">
                     <button class="back-btn" onclick="showPage('passenger-login')">&larr; Back to Login</button>
                     <h2>Passenger Registration</h2>
-                    <form id="passenger-register-form" onsubmit="handlePassengerRegister(event)">
+                    <form id="register-form" onsubmit="handlePassengerRegister(event)">
                         <div class="form-group">
                             <label class="form-label" for="reg-name">Full Name</label>
                             <input type="text" id="reg-name" class="form-control" placeholder="Enter your full name" required>
@@ -92,21 +145,25 @@
                             <input type="email" id="reg-email" class="form-control" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="reg-phone">Phone Number</label>
-                            <input type="tel" id="reg-phone" class="form-control" placeholder="Enter your phone number" required>
+                            <label class="form-label" for="reg-phone">Phone Number (Optional)</label>
+                            <input type="tel" id="reg-phone" class="form-control" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reg-age">Age (Optional)</label>
+                            <input type="number" id="reg-age" class="form-control" placeholder="Enter your age" min="1" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reg-gender">Gender (Optional)</label>
+                            <select id="reg-gender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="reg-password">Password</label>
                             <input type="password" id="reg-password" class="form-control" placeholder="Create a password" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="reg-category">Category</label>
-                            <select id="reg-category" class="form-control" required>
-                                <option value="General">General</option>
-                                <option value="Senior Citizen">Senior Citizen (30% discount)</option>
-                                <option value="Student">Student (25% discount)</option>
-                                <option value="Military">Military (50% discount)</option>
-                            </select>
                         </div>
                         <button type="submit" class="btn btn--primary btn--full-width">Register</button>
                     </form>
@@ -116,6 +173,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Passenger Dashboard -->
         <div id="passenger-dashboard" class="page">
@@ -134,6 +192,7 @@
                 </div>
             </nav>
 
+
             <div class="container dashboard-container">
                 <!-- Search Section -->
                 <div id="search-section" class="dashboard-section active">
@@ -141,6 +200,7 @@
                         <h2>Search Trains</h2>
                         <p class="text-secondary">Find trains and book your journey</p>
                     </div>
+
 
                     <div class="card search-card">
                         <div class="card__body">
@@ -150,45 +210,31 @@
                                     <button type="button" class="trip-btn" data-type="roundtrip" onclick="setTripType('roundtrip')">Round Trip</button>
                                 </div>
 
+
                                 <div class="search-form-grid">
-                                    <div class="form-group">
+                                    <!-- FROM Station with Autocomplete -->
+                                    <div class="form-group search-input-group">
                                         <label class="form-label" for="search-source">From</label>
-                                        <select id="search-source" class="form-control" required>
-                                            <option value="">Select Source</option>
-                                            <option value="Mumbai">Mumbai</option>
-                                            <option value="Delhi">Delhi</option>
-                                            <option value="Chennai">Chennai</option>
-                                            <option value="Kolkata">Kolkata</option>
-                                            <option value="Bangalore">Bangalore</option>
-                                            <option value="Hyderabad">Hyderabad</option>
-                                            <option value="Pune">Pune</option>
-                                            <option value="Ahmedabad">Ahmedabad</option>
-                                            <option value="Jaipur">Jaipur</option>
-                                            <option value="Lucknow">Lucknow</option>
-                                        </select>
+                                        <input type="text" id="search-source" class="form-control" autocomplete="off" placeholder="Search station..." required/>
+                                        <input type="hidden" id="search-source-code"/>
+                                        <div id="source-suggestions" class="suggestions-box"></div>
                                     </div>
 
-                                    <div class="form-group">
+
+                                    <!-- TO Station with Autocomplete -->
+                                    <div class="form-group search-input-group">
                                         <label class="form-label" for="search-destination">To</label>
-                                        <select id="search-destination" class="form-control" required>
-                                            <option value="">Select Destination</option>
-                                            <option value="Mumbai">Mumbai</option>
-                                            <option value="Delhi">Delhi</option>
-                                            <option value="Chennai">Chennai</option>
-                                            <option value="Kolkata">Kolkata</option>
-                                            <option value="Bangalore">Bangalore</option>
-                                            <option value="Hyderabad">Hyderabad</option>
-                                            <option value="Pune">Pune</option>
-                                            <option value="Ahmedabad">Ahmedabad</option>
-                                            <option value="Jaipur">Jaipur</option>
-                                            <option value="Lucknow">Lucknow</option>
-                                        </select>
+                                        <input type="text" id="search-destination" class="form-control" autocomplete="off" placeholder="Search station..." required/>
+                                        <input type="hidden" id="search-destination-code"/>
+                                        <div id="destination-suggestions" class="suggestions-box"></div>
                                     </div>
+
 
                                     <div class="form-group">
                                         <label class="form-label" for="search-date">Departure Date</label>
                                         <input type="date" id="search-date" class="form-control" required>
                                     </div>
+
 
                                     <div class="form-group" id="return-date-group" style="display: none;">
                                         <label class="form-label" for="search-return-date">Return Date</label>
@@ -196,10 +242,12 @@
                                     </div>
                                 </div>
 
+
                                 <button type="submit" class="btn btn--primary btn--lg">Search Trains</button>
                             </form>
                         </div>
                     </div>
+
 
                     <!-- Search Results -->
                     <div id="search-results" style="display: none;">
@@ -209,6 +257,7 @@
                         <div id="trains-list"></div>
                     </div>
 
+
                     <!-- Booking Modal -->
                     <div id="booking-modal" class="modal" style="display: none;">
                         <div class="modal-content">
@@ -217,10 +266,12 @@
                             <form id="booking-form" onsubmit="confirmBooking(event)">
                                 <div id="booking-train-info" class="booking-info"></div>
 
+
                                 <div class="form-group">
                                     <label class="form-label" for="passenger-name">Passenger Name</label>
                                     <input type="text" id="passenger-name" class="form-control" required>
                                 </div>
+
 
                                 <div class="form-row">
                                     <div class="form-group">
@@ -237,6 +288,7 @@
                                     </div>
                                 </div>
 
+
                                 <div class="form-group">
                                     <label class="form-label" for="booking-class">Class</label>
                                     <select id="booking-class" class="form-control" required onchange="calculateFare()">
@@ -246,6 +298,7 @@
                                         <option value="First Class">First Class</option>
                                     </select>
                                 </div>
+
 
                                 <div class="form-group">
                                     <label class="form-label" for="booking-category">Category</label>
@@ -257,10 +310,12 @@
                                     </select>
                                 </div>
 
+
                                 <div class="form-group">
                                     <label class="form-label" for="num-seats">Number of Seats</label>
                                     <input type="number" id="num-seats" class="form-control" min="1" max="6" value="1" required onchange="calculateFare()">
                                 </div>
+
 
                                 <div class="fare-summary">
                                     <div class="fare-row">
@@ -277,11 +332,13 @@
                                     </div>
                                 </div>
 
+
                                 <button type="submit" class="btn btn--primary btn--full-width btn--lg">Confirm Booking</button>
                             </form>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- My Bookings Section -->
                 <div id="bookings-section" class="dashboard-section">
@@ -290,10 +347,12 @@
                         <p class="text-secondary">View and manage your train reservations</p>
                     </div>
 
+
                     <div id="bookings-list">
                         <!-- Bookings will be dynamically inserted here -->
                     </div>
                 </div>
+
 
                 <!-- Feedback Section -->
                 <div id="feedback-section" class="dashboard-section">
@@ -301,6 +360,7 @@
                         <h2>Feedback &amp; Ratings</h2>
                         <p class="text-secondary">Share your experience with us</p>
                     </div>
+
 
                     <div class="card">
                         <div class="card__body">
@@ -313,6 +373,7 @@
                                         <option value="Rajdhani Express">Rajdhani Express</option>
                                     </select>
                                 </div>
+
 
                                 <div class="form-group">
                                     <label class="form-label">Rating</label>
@@ -330,21 +391,25 @@
                                     </div>
                                 </div>
 
+
                                 <div class="form-group">
                                     <label class="form-label" for="feedback-comment">Your Comments</label>
                                     <textarea id="feedback-comment" class="form-control" rows="4" placeholder="Share your experience..." required></textarea>
                                 </div>
+
 
                                 <button type="submit" class="btn btn--primary">Submit Feedback</button>
                             </form>
                         </div>
                     </div>
 
+
                     <div class="page-header" style="margin-top: 2rem;">
                         <h3>Recent Feedback</h3>
                     </div>
                     <div id="feedback-list"></div>
                 </div>
+
 
                 <!-- Profile Section -->
                 <div id="profile-section" class="dashboard-section">
@@ -353,33 +418,27 @@
                         <p class="text-secondary">Manage your account information</p>
                     </div>
 
+
                     <div class="card">
                         <div class="card__body">
                             <form id="profile-form" onsubmit="updateProfile(event)">
                                 <div class="form-group">
                                     <label class="form-label" for="profile-name">Full Name</label>
-                                    <input type="text" id="profile-name" class="form-control" value="John Doe" required>
+                                    <input type="text" id="profile-name" class="form-control" required>
                                 </div>
+
 
                                 <div class="form-group">
                                     <label class="form-label" for="profile-email">Email</label>
-                                    <input type="email" id="profile-email" class="form-control" value="john@example.com" required>
+                                    <input type="email" id="profile-email" class="form-control" required>
                                 </div>
+
 
                                 <div class="form-group">
                                     <label class="form-label" for="profile-phone">Phone Number</label>
-                                    <input type="tel" id="profile-phone" class="form-control" value="+91 9876543210" required>
+                                    <input type="tel" id="profile-phone" class="form-control" required>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="form-label" for="profile-category">Category</label>
-                                    <select id="profile-category" class="form-control" required>
-                                        <option value="General" selected>General</option>
-                                        <option value="Senior Citizen">Senior Citizen (30% discount)</option>
-                                        <option value="Student">Student (25% discount)</option>
-                                        <option value="Military">Military (50% discount)</option>
-                                    </select>
-                                </div>
 
                                 <button type="submit" class="btn btn--primary">Update Profile</button>
                             </form>
@@ -388,6 +447,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Admin Login Page -->
         <div id="admin-login" class="page">
@@ -413,6 +473,7 @@
             </div>
         </div>
 
+
         <!-- Admin Dashboard -->
         <div id="admin-dashboard" class="page">
             <nav class="navbar admin-navbar">
@@ -430,6 +491,7 @@
                 </div>
             </nav>
 
+
             <div class="container dashboard-container">
                 <!-- Overview Section -->
                 <div id="overview-section" class="dashboard-section active">
@@ -437,6 +499,7 @@
                         <h2>Dashboard Overview</h2>
                         <p class="text-secondary">Real-time statistics and insights</p>
                     </div>
+
 
                     <div class="stats-grid">
                         <div class="stat-card" style="background-color: var(--color-bg-1);">
@@ -468,6 +531,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <div class="page-header" style="margin-top: 2rem;">
                         <h3>Popular Routes</h3>
@@ -508,6 +572,7 @@
                     </div>
                 </div>
 
+
                 <!-- Manage Trains Section -->
                 <div id="trains-section" class="dashboard-section">
                     <div class="page-header">
@@ -515,7 +580,7 @@
                         <button class="btn btn--primary" onclick="showAddTrainForm()">+ Add New Train</button>
                     </div>
 
-                    <!-- Add Train Form -->
+
                     <div id="add-train-form" class="card" style="display: none; margin-bottom: 2rem;">
                         <div class="card__body">
                             <h3>Add New Train</h3>
@@ -530,54 +595,6 @@
                                         <input type="text" id="train-name" class="form-control" required>
                                     </div>
                                 </div>
-
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label" for="train-source">Source</label>
-                                        <select id="train-source" class="form-control" required>
-                                            <option value="Mumbai">Mumbai</option>
-                                            <option value="Delhi">Delhi</option>
-                                            <option value="Chennai">Chennai</option>
-                                            <option value="Kolkata">Kolkata</option>
-                                            <option value="Bangalore">Bangalore</option>
-                                            <option value="Hyderabad">Hyderabad</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="train-destination">Destination</label>
-                                        <select id="train-destination" class="form-control" required>
-                                            <option value="Mumbai">Mumbai</option>
-                                            <option value="Delhi">Delhi</option>
-                                            <option value="Chennai">Chennai</option>
-                                            <option value="Kolkata">Kolkata</option>
-                                            <option value="Bangalore">Bangalore</option>
-                                            <option value="Hyderabad">Hyderabad</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label" for="departure-time">Departure Time</label>
-                                        <input type="time" id="departure-time" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="arrival-time">Arrival Time</label>
-                                        <input type="time" id="arrival-time" class="form-control" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label" for="total-seats">Total Seats</label>
-                                        <input type="number" id="total-seats" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="fare-sleeper">Fare (Sleeper)</label>
-                                        <input type="number" id="fare-sleeper" class="form-control" required>
-                                    </div>
-                                </div>
-
                                 <div class="form-actions">
                                     <button type="submit" class="btn btn--primary">Add Train</button>
                                     <button type="button" class="btn btn--outline" onclick="hideAddTrainForm()">Cancel</button>
@@ -585,6 +602,7 @@
                             </form>
                         </div>
                     </div>
+
 
                     <div class="card">
                         <div class="card__body">
@@ -597,7 +615,6 @@
                                         <th>Timing</th>
                                         <th>Seats</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -608,10 +625,6 @@
                                         <td>06:00 - 22:30</td>
                                         <td>50 / 200</td>
                                         <td><span class="status status--success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn--sm btn--outline">Edit</button>
-                                            <button class="btn btn--sm btn--outline" style="color: var(--color-error);">Delete</button>
-                                        </td>
                                     </tr>
                                     <tr>
                                         <td>67890</td>
@@ -620,10 +633,6 @@
                                         <td>14:15 - 08:45</td>
                                         <td>20 / 300</td>
                                         <td><span class="status status--warning">Almost Full</span></td>
-                                        <td>
-                                            <button class="btn btn--sm btn--outline">Edit</button>
-                                            <button class="btn btn--sm btn--outline" style="color: var(--color-error);">Delete</button>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -631,12 +640,14 @@
                     </div>
                 </div>
 
+
                 <!-- Admin Bookings Section -->
                 <div id="admin-bookings-section" class="dashboard-section">
                     <div class="page-header">
                         <h2>All Bookings</h2>
                         <p class="text-secondary">Manage and monitor all reservations</p>
                     </div>
+
 
                     <div class="card">
                         <div class="card__body">
@@ -680,6 +691,7 @@
                     </div>
                 </div>
 
+
                 <!-- Admin Feedback Section -->
                 <div id="admin-feedback-section" class="dashboard-section">
                     <div class="page-header">
@@ -687,20 +699,6 @@
                         <p class="text-secondary">Monitor passenger reviews and ratings</p>
                     </div>
 
-                    <div class="feedback-stats">
-                        <div class="stat-card" style="background-color: var(--color-bg-1);">
-                            <div class="stat-content">
-                                <div class="stat-value">4.3</div>
-                                <div class="stat-label">Average Rating</div>
-                            </div>
-                        </div>
-                        <div class="stat-card" style="background-color: var(--color-bg-2);">
-                            <div class="stat-content">
-                                <div class="stat-value">524</div>
-                                <div class="stat-label">Total Reviews</div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div id="admin-feedback-list">
                         <div class="feedback-card">
@@ -713,6 +711,7 @@
                             </div>
                             <div class="feedback-comment">Comfortable journey, good service</div>
                         </div>
+
 
                         <div class="feedback-card">
                             <div class="feedback-header">
@@ -730,6 +729,7 @@
         </div>
     </div>
 
+
     <!-- Success Modal -->
     <div id="success-modal" class="modal" style="display: none;">
         <div class="modal-content modal-success">
@@ -739,6 +739,7 @@
             <button class="btn btn--primary" onclick="closeSuccessModal()">OK</button>
         </div>
     </div>
+
 
     <script src="app.js"></script>
 </body>

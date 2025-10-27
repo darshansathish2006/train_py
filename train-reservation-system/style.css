@@ -1851,6 +1851,58 @@ select.form-control {
   .data-table td {
     padding: var(--space-8);
   }
+
+  /* ---- SUGGESTIONS DROPDOWN FOR AUTOCOMPLETE ---- */
+.suggestions-box {
+  position: absolute;
+  background: #23272f; /* dark background */
+  border: 1.5px solid #6999be;
+  border-radius: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 2000;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(60,80,140,0.27);
+  margin-top: 8px;
+  display: none;
+  color: #eee;
+}
+
+.suggestion-item {
+  padding: 13px 18px;
+  cursor: pointer;
+  border-bottom: 1px dotted #444;
+  font-size: 15px;
+  transition: background 0.17s;
+  background: none;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+  background-color: #2f3e52;
+  color: #fff;
+}
+
+.suggestion-item strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.suggestion-item small {
+  color: #7eb9fd;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.search-input-group {
+  position: relative;
+}
+
 }
 
 /* Utility Classes */
