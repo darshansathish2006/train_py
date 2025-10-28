@@ -3,8 +3,7 @@ import mysql.connector
 conn=mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Darshan@06",
-<<<<<<< HEAD
+    password="user1234",
     database="train_reservation_system"
 )
 
@@ -125,8 +124,3 @@ print("✅ All 8 tables created successfully and changes committed to database."
 # Close connection
 mycursor.close()
 conn.close()
-=======
-    
-)
-print("Hi")
->>>>>>> a30c0b5e6ea16e1166108d6224d560d998fdc882

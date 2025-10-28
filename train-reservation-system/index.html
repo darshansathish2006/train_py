@@ -258,86 +258,65 @@
                     </div>
 
 
-                    <!-- Booking Modal -->
-                    <div id="booking-modal" class="modal" style="display: none;">
-                        <div class="modal-content">
-                            <button class="modal-close" onclick="closeBookingModal()">&times;</button>
-                            <h3>Book Your Ticket</h3>
-                            <form id="booking-form" onsubmit="confirmBooking(event)">
-                                <div id="booking-train-info" class="booking-info"></div>
+<!-- Booking Modal -->
+<div id="booking-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 850px; max-height: 90vh; overflow-y: auto;">
+        <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+        <h3>Book Your Ticket</h3>
+        <form id="booking-form" onsubmit="confirmBooking(event)">
+            <div id="booking-train-info" class="booking-info"></div>
 
+            <!-- Number of Passengers Selection -->
+            <div class="form-group">
+                <label class="form-label" for="num-passengers">Number of Passengers (Max 6)</label>
+                <input type="number" id="num-passengers" class="form-control" min="1" max="6" value="1" required onchange="updatePassengerForms()">
+                <small style="color: #666; font-size: 12px;">You can book for yourself and up to 5 family members/friends</small>
+            </div>
 
-                                <div class="form-group">
-                                    <label class="form-label" for="passenger-name">Passenger Name</label>
-                                    <input type="text" id="passenger-name" class="form-control" required>
-                                </div>
+            <!-- Dynamic Passenger Forms Container -->
+            <div id="passengers-container">
+                <!-- Passenger forms will be dynamically generated here -->
+            </div>
 
+            <!-- Booking Details Section -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                <h4 style="color: #333; margin-bottom: 15px;">Booking Details</h4>
 
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label" for="passenger-age">Age</label>
-                                        <input type="number" id="passenger-age" class="form-control" min="1" max="120" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="passenger-gender">Gender</label>
-                                        <select id="passenger-gender" class="form-control" required>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
+                <div class="form-group">
+                    <label class="form-label" for="booking-class">Class</label>
+                    <select id="booking-class" class="form-control" required onchange="calculateFare()">
+                        <option value="Sleeper">Sleeper</option>
+                        <option value="AC 3 Tier">AC 3 Tier</option>
+                        <option value="AC 2 Tier">AC 2 Tier</option>
+                        <option value="First Class">First Class</option>
+                    </select>
+                </div>
 
-
-                                <div class="form-group">
-                                    <label class="form-label" for="booking-class">Class</label>
-                                    <select id="booking-class" class="form-control" required onchange="calculateFare()">
-                                        <option value="Sleeper">Sleeper</option>
-                                        <option value="AC 3 Tier">AC 3 Tier</option>
-                                        <option value="AC 2 Tier">AC 2 Tier</option>
-                                        <option value="First Class">First Class</option>
-                                    </select>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="form-label" for="booking-category">Category</label>
-                                    <select id="booking-category" class="form-control" required onchange="calculateFare()">
-                                        <option value="General">General</option>
-                                        <option value="Senior Citizen">Senior Citizen (30% discount)</option>
-                                        <option value="Student">Student (25% discount)</option>
-                                        <option value="Military">Military (50% discount)</option>
-                                    </select>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="form-label" for="num-seats">Number of Seats</label>
-                                    <input type="number" id="num-seats" class="form-control" min="1" max="6" value="1" required onchange="calculateFare()">
-                                </div>
-
-
-                                <div class="fare-summary">
-                                    <div class="fare-row">
-                                        <span>Base Fare:</span>
-                                        <span id="base-fare">₹0</span>
-                                    </div>
-                                    <div class="fare-row">
-                                        <span>Discount:</span>
-                                        <span id="discount-amount">₹0</span>
-                                    </div>
-                                    <div class="fare-row total">
-                                        <span>Total Fare:</span>
-                                        <span id="total-fare">₹0</span>
-                                    </div>
-                                </div>
-
-
-                                <button type="submit" class="btn btn--primary btn--full-width btn--lg">Confirm Booking</button>
-                            </form>
-                        </div>
+                <div class="fare-summary">
+                    <div class="fare-row">
+                        <span>Base Fare (per passenger):</span>
+                        <span id="base-fare">₹0</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Number of Passengers:</span>
+                        <span id="passenger-count-display">1</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Total Discount:</span>
+                        <span id="discount-amount">₹0</span>
+                    </div>
+                    <div class="fare-row total">
+                        <span>Total Fare:</span>
+                        <span id="total-fare">₹0</span>
                     </div>
                 </div>
+
+                <button type="submit" class="btn btn--primary btn--full-width btn--lg">Confirm Booking</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 
                 <!-- My Bookings Section -->

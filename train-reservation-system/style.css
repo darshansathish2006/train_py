@@ -538,6 +538,7 @@ select.form-control {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-card-border);
+  padding: 90px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: box-shadow var(--duration-normal) var(--ease-standard);
@@ -548,12 +549,12 @@ select.form-control {
 }
 
 .card__body {
-  padding: var(--space-16);
+  padding:30px;
 }
 
 .card__header,
 .card__footer {
-  padding: var(--space-16);
+  padding: 30px;
   border-bottom: 1px solid var(--color-card-border-inner);
 }
 
